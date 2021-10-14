@@ -15,11 +15,11 @@ func renderTemplate(w http.ResponseWriter,filePath string, dataToRender interfac
 }
 
 func HomeView(w http.ResponseWriter,r *http.Request) {
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/home.gohtml",nil)
+  renderTemplate(w,"templates/home.gohtml",nil)
 }
 
 func CreateViewGET(w http.ResponseWriter,r *http.Request) {
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/create.gohtml",nil)
+  renderTemplate(w,"templates/create.gohtml",nil)
 }
 
 func CreateViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -32,28 +32,28 @@ func CreateViewPOST(w http.ResponseWriter,r *http.Request) {
   password := r.FormValue("password")
   err = models.CreateUser(name,email,password)
   if err != nil {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userAlreadyExists.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/userAlreadyExists.gohtml",struct{Email string}{Email: email,})
   } else {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/success.gohtml",nil)
+    renderTemplate(w,"templates/success.gohtml",nil)
   }
 }
 
 func ReadView(w http.ResponseWriter,r *http.Request) {
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/read.gohtml",nil)
+  renderTemplate(w,"templates/read.gohtml",nil)
 }
 
 func DisplayUserView(w http.ResponseWriter,r *http.Request) {
   email := r.FormValue("email")
   user, err := models.LookUpByEmail(email)
   if err != nil {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
   } else {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/displayUser.gohtml",user)
+    renderTemplate(w,"templates/displayUser.gohtml",user)
 }
 }
 
 func UpdateViewGET(w http.ResponseWriter,r *http.Request) {
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/Update.gohtml",nil)
+  renderTemplate(w,"templates/Update.gohtml",nil)
 }
 
 func UpdateViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -65,14 +65,14 @@ func UpdateViewPOST(w http.ResponseWriter,r *http.Request) {
   password := r.FormValue("password")
   err = models.UpdateUser(email,password)
   if err != nil {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
   } else {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/success.gohtml",nil)
+    renderTemplate(w,"templates/success.gohtml",nil)
   }
 }
 
 func DeleteViewGET(w http.ResponseWriter,r *http.Request) {
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/delete.gohtml",nil)
+  renderTemplate(w,"templates/delete.gohtml",nil)
 }
 
 func DeleteViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -83,8 +83,8 @@ func DeleteViewPOST(w http.ResponseWriter,r *http.Request) {
   email := r.FormValue("email")
   err = models.DeleteUser(email)
   if err != nil {
-    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
   } else{
-  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/success.gohtml",nil)
+  renderTemplate(w,"templates/success.gohtml",nil)
 }
 }
