@@ -4,7 +4,7 @@ import (
   _ "github.com/lib/pq"
 	"database/sql"
   "fmt"
-  "os"
+  "errors"
 )
 
 const (
@@ -34,36 +34,53 @@ func LookUpByEmail(email string) (User,error) {
   if err != nil {
     return User{},err
   }
-  fmt.Fprintf(os.Stdout,user.Name)
   return *user, nil
 }
 
-func CreateUser(name string, email string, password string) {
+func CreateUser(name string, email string, password string) error {
   db := Connect()
   defer db.Close()
-  _, err := db.Exec("INSERT INTO USERDATA (name,email,password) VALUES($1,$2,$3);", name, email, password)
-	if err != nil {
-		panic(err)
-	}
-  db.Close()
+  result, err := db.Exec("SELECT * FROM USERDATA WHERE email = $1;",email)
+  rowsaffected, err := result.RowsAffected()
+  if rowsaffected > 0 {
+    return errors.New("User already exits")
+  }
+  if err != nil {
+    panic(err)
+  }
+  _, err = db.Exec("INSERT INTO USERDATA (name,email,password) VALUES($1,$2,$3);", name, email, password)
+  if err != nil {
+    panic(err)
+  }
+	return nil
 }
 
-func UpdateUser(email string, password string) {
+func UpdateUser(email string, password string) error {
   db := Connect()
   defer db.Close()
-  _, err := db.Exec("UPDATE USERDATA SET password = $1 WHERE email = $2", password,email)
-	if err != nil {
-		panic(err)
-}
+  result, err := db.Exec("UPDATE USERDATA SET password = $1 WHERE email = $2", password,email)
+  if err != nil {
+    panic(err)
+  }
+  num, _ := result.RowsAffected()
+  if num == 0 {
+    return errors.New("No rows were affected, user does not exit")
+  }
+  return nil
 }
 
-func DeleteUser(email string) {
+func DeleteUser(email string) error {
   db := Connect()
   defer db.Close()
-  _, err := db.Exec("DELETE FROM USERDATA WHERE email = $1;", email)
-	if err != nil {
-		panic(err)
-}
+  result, err := db.Exec("DELETE FROM USERDATA WHERE email = $1;", email)
+  if err != nil {
+    panic(err)
+  }
+  num, _ := result.RowsAffected()
+  if num == 0 {
+    return errors.New("No rows were affected, user does not exit")
+  }
+  return nil
 }
 
 func Connect() *sql.DB {
@@ -78,6 +95,6 @@ func Connect() *sql.DB {
   if err != nil {
     panic(err)
   }
-  fmt.Println(os.Stdout,"Succesfully connected")
+  //fmt.Println(os.Stdout,"Succesfully connected")
   return db
 }
