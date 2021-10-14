@@ -6,24 +6,20 @@ import (
   "html/template"
 )
 
-// func renderTemplate(temp string, data {}interface) error {
-//
-// }
-
-func HomeView(w http.ResponseWriter,r *http.Request) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/home.gohtml")
+func renderTemplate(w http.ResponseWriter,filePath string, dataToRender interface{}) {
+  temp, err := template.ParseFiles(filePath)
   if err != nil {
     panic(err)
   }
-  temp.Execute(w,nil)
+  temp.Execute(w,dataToRender)
+}
+
+func HomeView(w http.ResponseWriter,r *http.Request) {
+  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/home.gohtml",nil)
 }
 
 func CreateViewGET(w http.ResponseWriter,r *http.Request) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/create.gohtml")
-  if err != nil {
-    panic(err)
-  }
-  temp.Execute(w,nil)
+  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/create.gohtml",nil)
 }
 
 func CreateViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -39,33 +35,21 @@ func CreateViewPOST(w http.ResponseWriter,r *http.Request) {
 }
 
 func ReadView(w http.ResponseWriter,r *http.Request) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/read.gohtml")
-  if err != nil {
-    panic(err)
-  }
-  temp.Execute(w,nil)
+  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/read.gohtml",nil)
 }
 
 func DisplayUserView(w http.ResponseWriter,r *http.Request) {
   email := r.FormValue("email")
-  foundUser, err := models.LookUpByEmail(email)
+  user, err := models.LookUpByEmail(email)
   if err != nil {
-    userNotFoundView(w,r,email)
+    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml",struct{Email string}{Email: email,})
   } else {
-    temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/displayUser.gohtml")
-    if err != nil {
-      panic(err)
-    }
-    temp.Execute(w,foundUser)
+    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/displayUser.gohtml",user)
 }
 }
 
 func UpdateViewGET(w http.ResponseWriter,r *http.Request) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/Update.gohtml")
-  if err != nil {
-    panic(err)
-  }
-  temp.Execute(w,nil)
+  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/Update.gohtml",nil)
 }
 
 func UpdateViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -79,11 +63,7 @@ func UpdateViewPOST(w http.ResponseWriter,r *http.Request) {
 }
 
 func DeleteViewGET(w http.ResponseWriter,r *http.Request) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/delete.gohtml")
-  if err != nil {
-    panic(err)
-  }
-  temp.Execute(w,nil)
+  renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/delete.gohtml",nil)
 }
 
 func DeleteViewPOST(w http.ResponseWriter,r *http.Request) {
@@ -93,17 +73,7 @@ func DeleteViewPOST(w http.ResponseWriter,r *http.Request) {
   }
   email := r.FormValue("email")
   models.DeleteUser(email)
-}
-
-func userNotFoundView(w http.ResponseWriter,r *http.Request, email string) {
-  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml")
   if err != nil {
-    panic(err)
+    renderTemplate(w,"/Users/otisjones/Desktop/CRUD/templates/userNotFound.gohtml",struct{Email string}{Email: email,})
   }
-  data := struct {
-    Email string
-  }{
-    Email: email,
-  }
-  temp.Execute(w,data)
 }
