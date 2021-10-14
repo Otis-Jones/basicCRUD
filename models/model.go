@@ -50,6 +50,24 @@ func CreateUser(name string, email string, password string) {
   db.Close()
 }
 
+func UpdateUser(email string, password string) {
+  db := Connect()
+  defer db.Close()
+  _, err := db.Exec("UPDATE USERDATA SET password = $1 WHERE email = $2", password,email)
+	if err != nil {
+		panic(err)
+}
+}
+
+func DeleteUser(email string) {
+  db := Connect()
+  defer db.Close()
+  _, err := db.Exec("DELETE FROM USERDATA WHERE email = $1;", email)
+	if err != nil {
+		panic(err)
+}
+}
+
 func Connect() *sql.DB {
   psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
   "dbname=%s sslmode=disable",

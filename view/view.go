@@ -69,3 +69,44 @@ func DisplayUserView(w http.ResponseWriter,r *http.Request) {
   }
   temp.Execute(w,foundUser)
 }
+
+func UpdateView(w http.ResponseWriter,r *http.Request) {
+fmt.Fprintf(os.Stdout,r.Method)
+switch r.Method {
+case "GET":
+  temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/Update.gohtml")
+  if err != nil {
+    panic(err)
+  }
+  temp.Execute(w,nil)
+case "POST":
+  err := r.ParseForm()
+  if err != nil {
+    panic(err)
+  }
+  email := r.FormValue("email")
+  password := r.FormValue("password")
+  fmt.Fprintf(os.Stdout,email)
+  fmt.Fprintf(os.Stdout,password)
+  models.UpdateUser(email,password)
+}
+}
+
+
+func DeleteView(w http.ResponseWriter,r *http.Request) {
+  switch r.Method {
+  case "GET":
+    temp, err := template.ParseFiles("/Users/otisjones/Desktop/CRUD/templates/delete.gohtml")
+    if err != nil {
+      panic(err)
+    }
+    temp.Execute(w,nil)
+  case "POST":
+    err := r.ParseForm()
+    if err != nil {
+      panic(err)
+    }
+    email := r.FormValue("email")
+    models.DeleteUser(email)
+  }
+}
