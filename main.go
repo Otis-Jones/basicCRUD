@@ -9,10 +9,13 @@ import (
 func main() {
   r := mux.NewRouter()
   r.HandleFunc("/",view.HomeView)
-  r.HandleFunc("/Create",view.CreateView)
+  r.HandleFunc("/Create",view.CreateViewGET).Methods("GET")
+  r.HandleFunc("/Create",view.CreateViewPOST).Methods("POST")
   r.HandleFunc("/Read",view.ReadView)
   r.HandleFunc("/displayUser",view.DisplayUserView)
-  r.HandleFunc("/Update",view.UpdateView)
-  r.HandleFunc("/Delete",view.DeleteView)
+  r.HandleFunc("/Update",view.UpdateViewGET).Methods("GET")
+  r.HandleFunc("/Update",view.UpdateViewPOST).Methods("POST")
+  r.HandleFunc("/Delete",view.DeleteViewGET).Methods("GET")
+  r.HandleFunc("/Delete",view.DeleteViewPOST).Methods("POST")
   http.ListenAndServe("localhost:3000",r)
 }

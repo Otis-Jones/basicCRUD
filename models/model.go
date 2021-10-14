@@ -22,22 +22,20 @@ type User struct {
   Password string
 }
 
-func LookUpByEmail(email string) User {
+func LookUpByEmail(email string) (User,error) {
   db := Connect()
   defer db.Close()
   row := db.QueryRow("SELECT * FROM USERDATA WHERE email = $1", email)
   if row.Err() != nil {
-    fmt.Println("ERROR 1")
-    panic(row.Err())
+    return User{},row.Err()
   }
   user := new(User)
   err := row.Scan(&user.Userid,&user.Name,&user.Email,&user.Password)
   if err != nil {
-    fmt.Println("ERROR 2")
-    panic(err)
+    return User{},err
   }
   fmt.Fprintf(os.Stdout,user.Name)
-  return *user
+  return *user, nil
 }
 
 func CreateUser(name string, email string, password string) {
