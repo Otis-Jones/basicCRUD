@@ -12,7 +12,7 @@ func main() {
   r.HandleFunc("/Create",view.CreateViewGET).Methods("GET")
   r.HandleFunc("/Create",view.CreateViewPOST).Methods("POST")
   r.HandleFunc("/Read",view.ReadView)
-  r.HandleFunc("/displayUser",view.DisplayUserView)
+  r.HandleFunc("/displayPage",view.DisplayPageView)
   r.HandleFunc("/Update",view.UpdateViewGET).Methods("GET")
   r.HandleFunc("/Update",view.UpdateViewPOST).Methods("POST")
   r.HandleFunc("/Delete",view.DeleteViewGET).Methods("GET")

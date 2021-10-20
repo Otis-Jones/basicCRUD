@@ -27,12 +27,12 @@ func CreateViewPOST(w http.ResponseWriter,r *http.Request) {
   if err != nil {
     panic(err)
   }
-  email := r.FormValue("email")
-  name := r.FormValue("name")
-  password := r.FormValue("password")
-  err = models.CreateUser(name,email,password)
+  title := r.FormValue("title")
+  author := r.FormValue("author")
+  article := r.FormValue("article")
+  err = models.CreatePage(title,author,article)
   if err != nil {
-    renderTemplate(w,"templates/userAlreadyExists.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/pageAlreadyExists.gohtml",struct{Title string}{Title: title,})
   } else {
     renderTemplate(w,"templates/success.gohtml",nil)
   }
@@ -42,13 +42,13 @@ func ReadView(w http.ResponseWriter,r *http.Request) {
   renderTemplate(w,"templates/read.gohtml",nil)
 }
 
-func DisplayUserView(w http.ResponseWriter,r *http.Request) {
-  email := r.FormValue("email")
-  user, err := models.LookUpByEmail(email)
+func DisplayPageView(w http.ResponseWriter,r *http.Request) {
+  title := r.FormValue("title")
+  page, err := models.LookUpByTitle(title)
   if err != nil {
-    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/pageNotFound.gohtml",struct{Title string}{Title: title,})
   } else {
-    renderTemplate(w,"templates/displayUser.gohtml",user)
+    renderTemplate(w,"templates/displayPage.gohtml",page)
 }
 }
 
@@ -61,11 +61,11 @@ func UpdateViewPOST(w http.ResponseWriter,r *http.Request) {
   if err != nil {
     panic(err)
   }
-  email := r.FormValue("email")
-  password := r.FormValue("password")
-  err = models.UpdateUser(email,password)
+  title := r.FormValue("title")
+  article := r.FormValue("article")
+  err = models.UpdatePage(title,article)
   if err != nil {
-    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/pageNotFound.gohtml",struct{Title string}{Title: title,})
   } else {
     renderTemplate(w,"templates/success.gohtml",nil)
   }
@@ -80,10 +80,10 @@ func DeleteViewPOST(w http.ResponseWriter,r *http.Request) {
   if err != nil {
     panic(err)
   }
-  email := r.FormValue("email")
-  err = models.DeleteUser(email)
+  title := r.FormValue("title")
+  err = models.DeletePage(title)
   if err != nil {
-    renderTemplate(w,"templates/userNotFound.gohtml",struct{Email string}{Email: email,})
+    renderTemplate(w,"templates/pageNotFound.gohtml",struct{Title string}{Title: title,})
   } else{
   renderTemplate(w,"templates/success.gohtml",nil)
 }
